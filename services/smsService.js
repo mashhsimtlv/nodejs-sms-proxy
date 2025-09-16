@@ -15,29 +15,29 @@ const sendSmsService = async (req) => {
         } = req.body;
 
         // Build request payload – same structure expected by your SMS provider (019SMS)
-        // const requestBody = {
-        //     sms: {
-        //         user: {
-        //             username: process.env.SMS_API_USERNAME || "simtlv99", // configure
-        //         },
-        //         source: process.env.SMS_SENDER_NAME || "Revuity", // default if not set
-        //         destinations: {
-        //             phone: phoneNumber,
-        //         },
-        //         message: `Thank you ${customerName}! Please leave your review here: ${reviewLink}`, // can improve with templates
-        //     },
-        // };
-
         const requestBody = {
-            "getApiToken":{
-                "user": {
-                    "username": "simtlv99",
-                    "password": "3HO0Hs#Q76",
+            sms: {
+                user: {
+                    username: process.env.SMS_API_USERNAME || "simtlv99", // configure
                 },
-                "username": "simtlv99",
-                "action": "current"
-            }
-        }
+                source: process.env.SMS_SENDER_NAME || "Revuity", // default if not set
+                destinations: {
+                    phone: phoneNumber,
+                },
+                message: `Thank you ${customerName}! Please leave your review here: ${reviewLink}`, // can improve with templates
+            },
+        };
+
+        // const requestBody = {
+        //     "getApiToken":{
+        //         "user": {
+        //             "username": "simtlv99",
+        //             "password": "3HO0Hs#Q76",
+        //         },
+        //         "username": "simtlv99",
+        //         "action": "current"
+        //     }
+        // }
 
         console.log("SMS request body:", requestBody , process.env.SUPABASE_FUNCTION_KEY);
 
@@ -48,7 +48,7 @@ const sendSmsService = async (req) => {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer 82939fc95e11bca3e15f815f13927e1e8efdccd4fb1a1bd4e03737f1359d8659`, // keep in .env
+                    "Authorization": `Bearer eyJ0eXAiOiJqd3QiLCJhbGciOiJIUzI1NiJ9.eyJmaXJzdF9rZXkiOiI3MjIxNCIsInNlY29uZF9rZXkiOiIzODMwMjczIiwiaXNzdWVkQXQiOiIyMi0wMS0yMDI1IDEyOjE2OjQwIiwidHRsIjo2MzA3MjAwMH0.0tKNbjjM7xzhHh29MekIyC9ITnWkDxQG8LHE5OgoDGo`, // keep in .env
                 },
             }
         );
