@@ -9,6 +9,9 @@
   },
   "type": "commonjs",
   "dependencies": {
+    "@logtail/node": "^0.5.6",
+    "axios": "^1.12.2",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "node-fetch": "^3.3.2"
@@ -16,7 +19,13 @@
   "devDependencies": {
     "nodemon": "^3.1.10"
   },
-  "keywords": ["sms", "api", "nodejs", "express", "review"],
+  "keywords": [
+    "sms",
+    "api",
+    "nodejs",
+    "express",
+    "review"
+  ],
   "author": "Your Name",
   "license": "MIT"
 }

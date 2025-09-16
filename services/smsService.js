@@ -1,103 +1,57 @@
-const crypto = require('crypto');
+const axios = require("axios");
 
-class SmsService {
-    constructor() {
-        // SMS templates for different languages
-        this.templates = {
-            en: {
-                reviewRequest: `Hi {customerName}! Thank you for choosing {businessName}. Please share your experience: {reviewLink}`
-            },
-            he: {
-                reviewRequest: `שלום {customerName}! תודה שבחרת ב{businessName}. אנא שתף את החוויה שלך: {reviewLink}`
-            }
-        };
-    }
-
-    async sendReviewSms(data) {
+const sendSmsService = async (req) => {
+    try {
         const {
             customerName,
+            customerEmail,
+            orderNumber,
             businessName,
+            reviewId,
             reviewLink,
             phoneNumber,
-            language = 'en'
-        } = data;
+            userId,
+            language,
+        } = req.body;
 
-        try {
-            // Generate message content
-            const message = this.generateMessage(customerName, businessName, reviewLink, language);
+        // Build request payload – same structure expected by your SMS provider (019SMS)
+        const requestBody = {
+            sms: {
+                user: {
+                    username: process.env.SMS_API_USERNAME || "simtlv99", // configure
+                },
+                source: process.env.SMS_SENDER_NAME || "Revuity", // default if not set
+                destinations: {
+                    phone: phoneNumber,
+                },
+                message: `Thank you ${customerName}! Please leave your review here: ${reviewLink}`, // can improve with templates
+            },
+        };
 
-            // Simulate SMS sending (replace with actual SMS provider integration)
-            const result = await this.simulateSmsDelivery(phoneNumber, message);
+        console.log("SMS request body:", requestBody);
 
-            // Log for R&D
-            console.log('SMS Service - Message prepared:', {
-                to: phoneNumber,
-                message: message,
-                language: language,
-                timestamp: new Date().toISOString()
-            });
+        // Call 019SMS API directly from your server
+        const response = await axios.post(
+            "https://019sms.co.il/api",
+            requestBody,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${process.env.SMS_API_TOKEN}`, // keep in .env
+                },
+            }
+        );
 
-            return {
-                messageId: result.messageId,
-                status: result.status,
-                phoneNumber: phoneNumber,
-                message: message
-            };
+        console.log("SMS API Response:", response.data);
 
-        } catch (error) {
-            console.error('SMS Service Error:', error);
-            throw new Error(`Failed to send SMS: ${error.message}`);
-        }
+        return {
+            success: true,
+            data: response.data,
+        };
+    } catch (error) {
+        console.error("sendSmsService error:", error.response?.data || error.message);
+        throw new Error(error.response?.data?.message || error.message);
     }
+};
 
-    generateMessage(customerName, businessName, reviewLink, language) {
-        const template = this.templates[language] || this.templates['en'];
-
-        return template.reviewRequest
-            .replace('{customerName}', customerName)
-            .replace('{businessName}', businessName)
-            .replace('{reviewLink}', reviewLink);
-    }
-
-    async simulateSmsDelivery(phoneNumber, message) {
-        // Simulate async SMS delivery
-        return new Promise((resolve, reject) => {
-            setTimeout(() => {
-                // Simulate success/failure for R&D
-                const isSuccess = Math.random() > 0.1; // 90% success rate
-
-                if (isSuccess) {
-                    resolve({
-                        messageId: this.generateMessageId(),
-                        status: 'sent',
-                        deliveredAt: new Date().toISOString()
-                    });
-                } else {
-                    reject(new Error('SMS delivery simulation failed'));
-                }
-            }, 1000); // Simulate network delay
-        });
-    }
-
-    generateMessageId() {
-        return `sms_${crypto.randomBytes(16).toString('hex')}`;
-    }
-
-    // Method to integrate with real SMS providers
-    async sendWithProvider(phoneNumber, message, provider = 'twilio') {
-        switch (provider) {
-            case 'twilio':
-                // return await this.sendWithTwilio(phoneNumber, message);
-                throw new Error('Twilio integration not implemented yet');
-
-            case 'aws-sns':
-                // return await this.sendWithAWSSNS(phoneNumber, message);
-                throw new Error('AWS SNS integration not implemented yet');
-
-            default:
-                throw new Error(`Unsupported SMS provider: ${provider}`);
-        }
-    }
-}
-
-module.exports = new SmsService();
+module.exports = { sendSmsService };
