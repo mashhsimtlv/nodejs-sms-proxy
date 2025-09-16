@@ -20,7 +20,7 @@ const sendSmsService = async (req) => {
                 user: {
                     username: process.env.SMS_API_USERNAME || "simtlv99", // configure
                 },
-                source: process.env.SMS_SENDER_NAME || "Acme Inc.", // default if not set
+                source: process.env.SMS_SENDER_NAME || "SIMTLV", // default if not set
                 destinations: {
                     phone: phoneNumber,
                 },
