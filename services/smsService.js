@@ -5,6 +5,7 @@ const sendSmsService = async (req) => {
         const {
             message,
             phoneNumber,
+            senderName
         } = req.body;
 
         // Build request payload – same structure expected by your SMS provider (019SMS)
@@ -13,7 +14,7 @@ const sendSmsService = async (req) => {
                 user: {
                     username: process.env.SMS_API_USERNAME || "simtlv99", // configure
                 },
-                source: process.env.SMS_SENDER_NAME || "SIMTLV", // default if not set
+                source: senderName,
                 destinations: {
                     phone: phoneNumber,
                 },
