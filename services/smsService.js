@@ -28,7 +28,7 @@ const sendSmsService = async (req) => {
             },
         };
 
-        console.log("SMS request body:", requestBody);
+        console.log("SMS request body:", requestBody , process.env.SMS_API_TOKEN);
 
         // Call 019SMS API directly from your server
         const response = await axios.post(
