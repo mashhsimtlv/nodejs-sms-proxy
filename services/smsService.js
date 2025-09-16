@@ -15,18 +15,29 @@ const sendSmsService = async (req) => {
         } = req.body;
 
         // Build request payload – same structure expected by your SMS provider (019SMS)
+        // const requestBody = {
+        //     sms: {
+        //         user: {
+        //             username: process.env.SMS_API_USERNAME || "simtlv99", // configure
+        //         },
+        //         source: process.env.SMS_SENDER_NAME || "Revuity", // default if not set
+        //         destinations: {
+        //             phone: phoneNumber,
+        //         },
+        //         message: `Thank you ${customerName}! Please leave your review here: ${reviewLink}`, // can improve with templates
+        //     },
+        // };
+
         const requestBody = {
-            sms: {
-                user: {
-                    username: process.env.SMS_API_USERNAME || "simtlv99", // configure
+            "getApiToken":{
+                "user": {
+                    "username": "simtlv99",
+                    "password": "3HO0Hs#Q76",
                 },
-                source: process.env.SMS_SENDER_NAME || "Revuity", // default if not set
-                destinations: {
-                    phone: phoneNumber,
-                },
-                message: `Thank you ${customerName}! Please leave your review here: ${reviewLink}`, // can improve with templates
-            },
-        };
+                "username": "simtlv99",
+                "action": "current"
+            }
+        }
 
         console.log("SMS request body:", requestBody , process.env.SUPABASE_FUNCTION_KEY);
 
