@@ -37,7 +37,7 @@ const sendSmsService = async (req) => {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${process.env.SUPABASE_FUNCTION_KEY}`, // keep in .env
+                    "Authorization": `Bearer 82939fc95e11bca3e15f815f13927e1e8efdccd4fb1a1bd4e03737f1359d8659`, // keep in .env
                 },
             }
         );
