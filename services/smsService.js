@@ -3,15 +3,8 @@ const axios = require("axios");
 const sendSmsService = async (req) => {
     try {
         const {
-            customerName,
-            customerEmail,
-            orderNumber,
-            businessName,
-            reviewId,
-            reviewLink,
+            message,
             phoneNumber,
-            userId,
-            language,
         } = req.body;
 
         // Build request payload – same structure expected by your SMS provider (019SMS)
@@ -24,7 +17,7 @@ const sendSmsService = async (req) => {
                 destinations: {
                     phone: phoneNumber,
                 },
-                message: `Thank you ${customerName}! Please leave your review here: ${reviewLink}`, // can improve with templates
+                message: message
             },
         };
 
